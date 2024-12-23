@@ -1,6 +1,7 @@
 from typing import Any
 
 from sqlalchemy import URL, Column, Table
+from sqlalchemy.sql.sqltypes import NullType
 from sqlmodel import MetaData, create_engine
 
 
@@ -39,7 +40,10 @@ def define_field(column: Column[Any]):
 
 
 def define_field_type(column: Column[Any]):
-    return f"Optional[{column.type.python_type.__name__}]"
+    if type(column.type) == NullType:
+        return f"Optional[str]"
+    else:
+        return f"Optional[{column.type.python_type.__name__}]"
 
 
 def define_field_value(column: Column[Any]):
